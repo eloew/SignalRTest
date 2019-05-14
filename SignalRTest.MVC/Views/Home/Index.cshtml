@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p><a href="#" class="sendScore">Send score from client (not working. Help me!</a></p>
+    <p><a href="#" class="sendScore1">Send score from server</a></p>
+    <p><input id="messagesList" name="messagesList" value="zztop" /></p>
+</div>
+
+@section Scripts {
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+          // $("div").css("border", "3px solid blue");
+        });
+ 
+        var connection = new signalR.HubConnectionBuilder()
+            .withUrl('/scoreHub')
+            .configureLogging(signalR.LogLevel.Trace)
+            .build();
+
+        // Create a function that the hub can call to broadcast messages.
+        connection.on('broadcastScore', function (message) {
+            document.getElementById("messagesList").value = message;
+
+        });
+
+        connection.start();
+
+        $(".sendScore").click(function () {
+            connection.invoke("broadcastScore", "From client");
+        });
+
+         $(".sendScore1").click(function () {
+            var url = '@Url.Action("sendScore", "Home")';
+           
+            var roleId = $(this).val();
+ 
+            $.post(url, { userId: 1}, function (data) {
+                if (data) {
+                    //alert("SUCCESS");
+                }
+                else {
+                    alert('error');
+                }
+            });
+           
+        });
+    
+
+    </script>
+}
