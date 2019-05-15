@@ -23,6 +23,7 @@
 
         // Create a function that the hub can call to broadcast messages.
         connection.on('broadcastScore', function (message) {
+            $("div").css("border", "3px solid green");
             document.getElementById("messagesList").value = message;
 
         });
